@@ -1,0 +1,243 @@
+/* Цветовая схема: три базовых цвета. Все остальные оттенки — их смеси,
+   посчитаны заранее (без color-mix, чтобы работало и на старых телефонах). */
+:root {
+  --bg: #FAF6F2;          /* 1. молочный — фон */
+  --text: #3B3331;        /* 2. тёплый графит — текст; фон просмотра фото */
+  --accent: #A8625D;      /* 3. пыльная роза — только кнопки */
+
+  --card: #FDFBFA;        /* фон + 60% белого: карточки, текст на кнопках (4,5:1) */
+  --line: #E7E3DF;        /* фон + 10% графита: разделители */
+  --muted: #746E6B;       /* графит + 30% фона: подписи (4,7:1 на фоне) */
+  --tile: #F0E4E0;        /* фон + 12% розы: подложка фото, пока грузится */
+  --accent-press: #905853;/* роза + 22% графита: нажатая кнопка */
+
+  --gap: 20px;
+  --radius: 18px;
+  --sticky-h: 56px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 17px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+  /* место под закреплённую кнопку, чтобы она не закрывала низ страницы */
+  padding-bottom: calc(var(--sticky-h) + 32px + env(safe-area-inset-bottom));
+}
+
+img { display: block; max-width: 100%; height: auto; }
+ul, dl, dd { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; color: inherit; }
+
+main { max-width: 720px; margin: 0 auto; padding: 0 var(--gap); }
+
+h1, h2 { font-weight: 700; line-height: 1.15; margin: 0; }
+h2 { font-size: 28px; margin-bottom: 20px; }
+
+/* ——— Кнопка ——— */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: 999px;
+  gap: 10px;
+  background: var(--accent);
+  color: var(--card);
+  font-size: 19px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(168, 98, 93, .28);
+  text-decoration: none;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .15s;
+}
+.btn svg { flex: none; width: 22px; height: 22px; }
+.btn:hover, .btn:active { background: var(--accent-press); }
+.btn:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+
+.btn--sticky {
+  position: fixed;
+  left: var(--gap);
+  right: var(--gap);
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  transition: opacity .2s, visibility .2s;
+  width: auto;
+  min-height: var(--sticky-h);
+  z-index: 10;
+  box-shadow: 0 6px 20px rgba(59, 51, 49, .22);
+}
+/* прячем, пока на экране видна такая же кнопка из страницы — чтобы не было двух подряд */
+.btn--sticky.is-hidden { opacity: 0; visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .btn--sticky { transition: none; } }
+
+/* ——— Первый экран ——— */
+.hero { padding: 40px 0 36px; }
+.hero__name { font-size: 48px; letter-spacing: -.01em; }
+.hero__role { margin: 6px 0 0; font-size: 18px; color: var(--muted); }
+.hero__lead { margin: 16px 0 24px; font-size: 20px; line-height: 1.4; max-width: 22em; }
+
+/* ——— Разделы ——— */
+.section { padding: 36px 0; border-top: 1px solid var(--line); }
+.section--last { padding-bottom: 24px; }
+
+/* Галерея: 2 в ряд на телефоне */
+.gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.gallery__item {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--tile);
+  cursor: zoom-in;
+  aspect-ratio: 1;
+}
+.gallery__item img { width: 100%; height: 100%; object-fit: cover; }
+.gallery__item { -webkit-tap-highlight-color: transparent; }
+.gallery__item:active { opacity: .85; }
+.gallery__item:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+
+/* Подписи к фото */
+.gallery__cap { margin: 6px 2px 0; font-size: 16px; color: var(--muted); }
+
+/* Цены */
+.prices { background: var(--card); border-radius: var(--radius); padding: 4px 20px; }
+.prices li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.prices li:last-child { border-bottom: 0; }
+.prices b { white-space: nowrap; font-size: 18px; }
+.prices small { display: block; margin-top: 2px; font-size: 16px; line-height: 1.35; color: var(--muted); }
+.note + .note { margin-top: 6px; }
+.link { color: var(--text); text-decoration: underline; text-underline-offset: 3px; display: inline-flex; align-items: center; min-height: 48px; }
+.note { margin: 16px 0 0; color: var(--muted); }
+
+/* Отзывы: карточки одна под другой */
+.reviews { display: grid; gap: 12px; }
+.review { background: var(--card); border-radius: var(--radius); padding: 20px; }
+.review__text { margin: 0; }
+.review__name { margin: 10px 0 0; color: var(--muted); font-weight: 600; }
+
+/* Запись */
+.info { display: grid; gap: 12px; margin-bottom: 24px; }
+.rules { display: grid; gap: 10px; margin: 0 0 24px; }
+.rules li { position: relative; padding-left: 26px; }
+.rules li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+.demo-note { margin: 0; padding: 12px var(--gap); background: var(--tile); font-size: 16px; text-align: center; }
+.cta { margin: 0 0 16px; font-size: 20px; font-weight: 600; line-height: 1.35; }
+.info div { background: var(--card); border-radius: var(--radius); padding: 16px 20px; }
+.info dt { color: var(--muted); font-size: 16px; }
+.info dd { font-size: 18px; font-weight: 600; }
+
+/* ——— Просмотр фото на весь экран ——— */
+.viewer {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--text);
+  color: var(--bg);
+  overflow: hidden;
+}
+.viewer::backdrop { background: var(--text); }
+.viewer__track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.viewer__track::-webkit-scrollbar { display: none; }
+.viewer__slide {
+  flex: 0 0 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+.viewer__slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.viewer__count {
+  position: absolute;
+  top: calc(16px + env(safe-area-inset-top));
+  left: 20px;
+  margin: 0;
+  line-height: 48px;
+  font-size: 16px;
+}
+.viewer__close, .viewer__arrow {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(250, 246, 242, .16);
+  color: var(--bg);
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+.viewer__close { top: calc(16px + env(safe-area-inset-top)); right: 16px; }
+.viewer__arrow { top: 50%; transform: translateY(-50%); display: none; }
+.viewer__arrow--prev { left: 16px; }
+.viewer__arrow--next { right: 16px; }
+.viewer__close:focus-visible, .viewer__arrow:focus-visible { outline: 3px solid var(--bg); }
+
+/* Стрелки — только там, где есть мышь; на телефоне листают свайпом */
+@media (hover: hover) and (pointer: fine) {
+  .viewer__arrow { display: block; }
+}
+
+/* ——— Очень узкие телефоны (320 px) ——— */
+@media (max-width: 359px) {
+  :root { --gap: 16px; }
+  .hero__name { font-size: 44px; }
+  .prices { padding: 4px 16px; }
+}
+
+/* ——— Широкий экран ——— */
+@media (min-width: 768px) {
+  .btn { width: auto; display: inline-flex; min-width: 320px; }
+  .btn--sticky { width: auto; min-width: 0; left: 50%; right: auto; transform: translateX(-50%); padding: 14px 40px; }
+  .hero__name { font-size: 64px; }
+  .gallery { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .reviews { grid-template-columns: repeat(2, 1fr); }
+  .section--last { padding-bottom: 72px; }
+}
+@media (min-width: 768px) and (min-height: 600px) {
+  .hero { padding: 96px 0 64px; }
+}
+
+/* Должно идти последним: иначе .btn { display: inline-flex } выше вернёт кнопку */
+/* ——— Компьютер: закреплённая кнопка не нужна. На телефоне, повёрнутом
+   горизонтально, и на планшете (сенсорный экран) она остаётся ——— */
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
+  body { padding-bottom: 0; }
+  .btn--sticky { display: none; }
+}
+
+/* Рейтинг вместо текстов отзывов */
+.rating { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; background: var(--card); border-radius: var(--radius); padding: 16px 20px; }
+.rating__score { margin: 0; font-size: 28px; font-weight: 700; }
+.rating__score span { font-size: 20px; color: var(--accent); letter-spacing: 2px; }
+.rating__count { margin: 0; color: var(--muted); }
